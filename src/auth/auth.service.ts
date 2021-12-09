@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import { LoginUserInput } from './dto/login-user.input';
 
 @Injectable()
 export class AuthService {
@@ -13,5 +14,15 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  async login(loginUserInput: LoginUserInput) {
+    const user = await this.usersService.findOne(loginUserInput.username);
+    const { password, ...result } = user;
+
+    return {
+      access_token: 'jwt', // TODO: implement jwt
+      user: result,
+    };
   }
 }
